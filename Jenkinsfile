@@ -1,5 +1,11 @@
 #!/bin/env groovy
 
+properties([
+    parameters([
+        text(name: 'VERSION_NAME'),
+    ]),
+])
+
 node('master'){
     def imageName = 'cliqz-daisy'
     stage('Checkout'){
@@ -11,7 +17,7 @@ node('master'){
 
     docker.image(imageName).inside() {
         stage('gradle assemble') {
-            sh './gradlew assembleNightly -PversionName=0.0.1'
+            sh './gradlew assembleNightly -PversionName=${params.VERSION_NAME}'
             sh 'ls -la ./app/build/outputs/apk/nightly/'
         }
 
